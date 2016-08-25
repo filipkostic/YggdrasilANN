@@ -45,7 +45,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArtificialNeuralNetwork.cs" />
+    <Compile Include="CostFunctions\Sigmoid.cs" />
+    <Compile Include="CostGradientTuple.cs" />
+    <Compile Include="DataSet.cs" />
+    <Compile Include="Fmincg.cs" />
+    <Compile Include="ICostGradientTuple.cs" />
+    <Compile Include="MatrixUtility.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
