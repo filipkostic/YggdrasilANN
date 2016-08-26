@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace NeuralNetwork
 {
-    class ArtificialNeuralNetwork
+    public class ArtificialNeuralNetwork
     {
         Matrix<double> TrainingSet { get; }
         Matrix<double> TrainingSetDesiredOutput { get; }

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeuralNetwork
 {
-    class CostGradientResult : ICostGradientResult
+    public class CostGradientResult : ICostGradientResult
     {
         public CostGradientResult(double cost, Vector<double> gradient)
         {
