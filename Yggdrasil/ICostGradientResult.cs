@@ -2,7 +2,7 @@
 
 namespace NeuralNetwork
 {
-    interface ICostGradientTuple
+    interface ICostGradientResult
     {
         double Cost { get; }
         Vector<double> Gradient { get; }

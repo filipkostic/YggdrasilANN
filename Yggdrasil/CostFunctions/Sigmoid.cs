@@ -1,9 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NeuralNetwork.CostFunctions
 {
@@ -38,7 +34,7 @@ namespace NeuralNetwork.CostFunctions
             return sigmoidLayer.PointwiseMultiply(1 - sigmoidLayer);
         }
 
-        public static ICostGradientTuple CostAndGradient(Matrix<double> currentLayerWeights, Matrix<double> nextLayerWeights, Matrix<double> inputs, Matrix<double> desiredOutputs, double lambda)
+        public static ICostGradientResult CostAndGradient(Matrix<double> currentLayerWeights, Matrix<double> nextLayerWeights, Matrix<double> inputs, Matrix<double> desiredOutputs, double lambda)
         {
             Matrix<double> thetaGrad1 = Matrix<double>.Build.Dense(currentLayerWeights.RowCount, currentLayerWeights.ColumnCount, 0d);
             Matrix<double> thetaGrad2 = Matrix<double>.Build.Dense(nextLayerWeights.RowCount, nextLayerWeights.ColumnCount, 0d);
@@ -52,10 +48,8 @@ namespace NeuralNetwork.CostFunctions
                 FeedForward(currentLayerWeights, nextLayerWeights, inputs, i, out a1, out z2, out a2, out a3);
                 BackPropagation(nextLayerWeights, desiredOutputs, ref thetaGrad1, ref thetaGrad2, i, a1, z2, a2, a3);
             }
-
             Vector<double> unrolledGradient = CalculateGradientAndUnroll(currentLayerWeights, nextLayerWeights, desiredOutputs, lambda, ref thetaGrad1, ref thetaGrad2);
-
-            return new CostGradientTuple(cost, unrolledGradient);
+            return new CostGradientResult(cost, unrolledGradient);
         }
 
         static void CalculateRegularization(Matrix<double> inputWeights, Matrix<double> hiddenLayerWeights, Matrix<double> inputs, double lambda, out Matrix<double> A3, out double regularization)

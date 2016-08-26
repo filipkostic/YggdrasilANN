@@ -6,7 +6,7 @@ namespace NeuralNetwork
 {
     static class MatrixUtility
     {
-        internal static Tuple<Matrix<T>, Matrix<T>> Split<T>(this Matrix<T> matrix, int[] indexes)
+        public static Tuple<Matrix<T>, Matrix<T>> Split<T>(this Matrix<T> matrix, int[] indexes)
             where T : struct, IEquatable<T>, IFormattable
         {
             Matrix<T> first = Matrix<T>.Build.Dense(matrix.RowCount - indexes.Length, matrix.ColumnCount);
@@ -27,13 +27,13 @@ namespace NeuralNetwork
             return new Tuple<Matrix<T>, Matrix<T>>(first, second);
         }
 
-        internal static int GetSizeFromPercentage<T>(this Matrix<T> matrix, double percentage)
+        public static int GetSizeFromPercentage<T>(this Matrix<T> matrix, double percentage)
             where T : struct, IEquatable<T>, IFormattable
         {
             return (int)Math.Floor(matrix.RowCount / percentage);
         }
 
-        internal static Matrix<double> Random(this MatrixBuilder<double> builder, int rows, int columns)
+        public static Matrix<double> Random(this MatrixBuilder<double> builder, int rows, int columns)
         {
             Random randomizer = new Random();
             Matrix<double> weights = Matrix<double>.Build.Dense(rows, columns);
@@ -64,11 +64,11 @@ namespace NeuralNetwork
             return unrolledGradient;
         }
 
-        public static Tuple<Matrix<double>, Matrix<double>> ReshapeMatrices<T>(Vector<double> unrolledMatrices, int inputLayerWeightsRows, int inputLayerWeightsColumns, int hiddenLayerWeightsRows, int hiddenLayerWeightsColumns)
+        public static Tuple<Matrix<double>, Matrix<double>> ReshapeMatrices(this Vector<double> unrolledMatrices, int firstRows, int firstColumns, int secondRows, int secondColumns)
         {
             return new Tuple<Matrix<double>, Matrix<double>>(
-                Matrix<double>.Build.DenseOfColumnMajor(inputLayerWeightsRows, inputLayerWeightsColumns, unrolledMatrices.SubVector(0, inputLayerWeightsRows * inputLayerWeightsColumns)),
-                Matrix<double>.Build.DenseOfColumnMajor(hiddenLayerWeightsRows, hiddenLayerWeightsColumns, unrolledMatrices.SubVector(inputLayerWeightsRows * inputLayerWeightsColumns, hiddenLayerWeightsRows * hiddenLayerWeightsColumns)));
+                Matrix<double>.Build.DenseOfColumnMajor(firstRows, firstColumns, unrolledMatrices.SubVector(0, firstRows * firstColumns)),
+                Matrix<double>.Build.DenseOfColumnMajor(secondRows, secondColumns, unrolledMatrices.SubVector(firstRows * firstColumns, secondRows * secondColumns)));
         }
     }
 }
