@@ -57,6 +57,7 @@ namespace Logger
             CurrentLogItem.TrainingTimeInMilliseconds = (EndTime - StartTime).TotalMilliseconds;
             LogItems.Add(CurrentLogItem);
             CurrentLogItem = null;
+            WriteToLogFile();
         }
 
         public void WriteToLogFile()
