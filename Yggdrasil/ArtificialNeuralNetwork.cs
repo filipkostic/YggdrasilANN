@@ -14,7 +14,8 @@ namespace NeuralNetwork
         int NeuronsInHiddenLayer { get; }
         int Epochs { get; }
         double Lambda { get; }
-        Lazy<ANNLogger> logger = new Lazy<ANNLogger>(() => new ANNLogger(DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".json"));
+        Lazy<ANNLogger> logger = new Lazy<ANNLogger>(() => new ANNLogger(
+            String.Format("{0} - {1}.json", DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"), System.Threading.Thread.CurrentThread)));
         ANNLogger Logger
         {
             get
