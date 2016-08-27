@@ -19,7 +19,7 @@ namespace NeuralNetwork
         }
 
         public delegate ICostGradientResult CostFunction(Matrix<double> inputWeights, Matrix<double> hiddenLayerWeights, Matrix<double> inputs, Matrix<double> desiredOutputs, double lambda);
-        public delegate void LearningEventDelegate(Options options, Vector<double> data, double cost);
+        public delegate void LearningEventDelegate(int epoch, Options options, Vector<double> data, double cost);
         public event LearningEventDelegate LearningEvent;
 
         const double EXT = 3.0;
@@ -44,7 +44,7 @@ namespace NeuralNetwork
             ICostGradientResult evaluate = costFunction(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
             double cost = evaluate.Cost;
             Vector<double> gradient = evaluate.Gradient;
-            LearningEvent(options, input, cost);
+            LearningEvent(currentEpoch, options, input, cost);
             
             currentEpoch = currentEpoch + (options.Epochs < 0 ? 1 : 0);
             Vector<double> inverseGradient = gradient.Multiply(-1d);
@@ -63,7 +63,7 @@ namespace NeuralNetwork
                 evaluate = costFunction(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
                 double epochCost = evaluate.Cost;
                 Vector<double> innerGradient = evaluate.Gradient;
-                LearningEvent(options, input, epochCost);
+                LearningEvent(currentEpoch, options, input, epochCost);
 
                 currentEpoch = currentEpoch + (options.Epochs < 0 ? 1 : 0);
                 double epochSlope = innerGradient.DotProduct(inverseGradient);
@@ -86,7 +86,7 @@ namespace NeuralNetwork
                         evaluate = costFunction(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
                         epochCost = evaluate.Cost;
                         innerGradient = evaluate.Gradient;
-                        LearningEvent(options, input, epochCost);
+                        LearningEvent(currentEpoch, options, input, epochCost);
                         M = M - 1;
                         currentEpoch = currentEpoch + (options.Epochs < 0 ? 1 : 0);
                         epochSlope = innerGradient.DotProduct(inverseGradient);
@@ -116,7 +116,7 @@ namespace NeuralNetwork
                     evaluate = costFunction(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
                     epochCost = evaluate.Cost;
                     innerGradient = evaluate.Gradient;
-                    LearningEvent(options, input, epochCost);
+                    LearningEvent(currentEpoch, options, input, epochCost);
                     M = M - 1;
                     currentEpoch = CountEpochs(options, currentEpoch);
                     epochSlope = innerGradient.DotProduct(inverseGradient);

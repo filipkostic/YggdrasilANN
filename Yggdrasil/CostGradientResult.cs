@@ -6,7 +6,7 @@ namespace NeuralNetwork
 {
     public class CostGradientResult : ICostGradientResult
     {
-        public CostGradientResult(double cost, Vector<double> gradient)
+        public CostGradientResult(double cost, Vector<double> gradient, double accuracy)
         {
             Cost = cost;
             lock (costHistory)
@@ -14,6 +14,7 @@ namespace NeuralNetwork
                 costHistory.Add(cost);
             }
             Gradient = gradient;
+            Accuracy = accuracy;
         }
 
         static List<double> costHistory = new List<double>();
@@ -35,5 +36,7 @@ namespace NeuralNetwork
         public double Cost { get; }
 
         public Vector<double> Gradient { get; }
+
+        public double Accuracy { get; }
     }
 }

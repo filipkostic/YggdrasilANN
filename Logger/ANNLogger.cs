@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Json;
 
 namespace Logger
@@ -35,9 +36,18 @@ namespace Logger
 
         public List<ANNLogItem> LogItems { get; }
 
-        public void AddEpoch(double cost, double accuracy)
+        public void AddEpoch(int epoch, double cost, double accuracy)
         {
-            CurrentLogItem.Epochs.Add(new ANNLogEpochItem { Cost = cost, Accuracy = accuracy });
+            var currentEpoch = CurrentLogItem.Epochs.FirstOrDefault(x => x.Epoch == epoch);
+            if (currentEpoch == null)
+            {
+                CurrentLogItem.Epochs.Add(new ANNLogEpochItem { Epoch = epoch, Cost = cost, Accuracy = accuracy });
+            }
+            else
+            {
+                currentEpoch.Cost = cost;
+                currentEpoch.Accuracy = accuracy;
+            }
         }
 
         ANNLogItem CurrentLogItem;

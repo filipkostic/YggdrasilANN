@@ -120,14 +120,14 @@ namespace NeuralNetwork
             Logger.Finish();
             weights = result.ReshapeMatrices(weights.Item1.RowCount, weights.Item1.ColumnCount, weights.Item2.RowCount, weights.Item2.ColumnCount);
             double accuracy = CostFunctions.Sigmoid.CalculateAccuracy(TestSet, TestSetDesiredOutput, weights.Item1, weights.Item2);
-            return new CostGradientResult(CostGradientResult.History.Last(), result);
+            return new CostGradientResult(CostGradientResult.History.Last(), result, accuracy);
         }
 
-        void Ann_LearningEvent(Options options, Vector<double> input, double cost)
+        void Ann_LearningEvent(int epoch, Options options, Vector<double> input, double cost)
         {
             var weights = input.ReshapeMatrices(options.Weights.Item1.RowCount, options.Weights.Item1.ColumnCount, options.Weights.Item2.RowCount, options.Weights.Item2.ColumnCount);
             double accuracy = CostFunctions.Sigmoid.CalculateAccuracy(options.Test.Set, options.Test.Desired, weights.Item1, weights.Item2);
-            Logger.AddEpoch(cost, accuracy);
+            Logger.AddEpoch(epoch, cost, accuracy);
         }
 
         Tuple<Matrix<double>, Matrix<double>> InitializeWeightLayers()

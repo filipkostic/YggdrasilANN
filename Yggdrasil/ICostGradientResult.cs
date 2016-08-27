@@ -6,5 +6,6 @@ namespace NeuralNetwork
     {
         double Cost { get; }
         Vector<double> Gradient { get; }
+        double Accuracy { get; }
     }
 }

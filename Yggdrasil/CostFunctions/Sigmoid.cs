@@ -49,7 +49,7 @@ namespace NeuralNetwork.CostFunctions
                 BackPropagation(nextLayerWeights, desiredOutputs, ref thetaGrad1, ref thetaGrad2, i, a1, z2, a2, a3);
             }
             Vector<double> unrolledGradient = CalculateGradientAndUnroll(currentLayerWeights, nextLayerWeights, desiredOutputs, lambda, ref thetaGrad1, ref thetaGrad2);
-            return new CostGradientResult(cost, unrolledGradient);
+            return new CostGradientResult(cost, unrolledGradient, 0d);
         }
 
         static void CalculateRegularization(Matrix<double> inputWeights, Matrix<double> hiddenLayerWeights, Matrix<double> inputs, double lambda, out Matrix<double> A3, out double regularization)
