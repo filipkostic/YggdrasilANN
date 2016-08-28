@@ -19,13 +19,16 @@ namespace ArtificialNeuralNetwork
             var result = parser.Read(@"DataSets\letter.data");
             for (int epochs = 50; epochs < 100; epochs += 10)
             {
-                for (int numberOfNeurons = 5; numberOfNeurons < 105; numberOfNeurons += 5)
+                for (int numberOfNeurons = 15; numberOfNeurons < 105; numberOfNeurons += 5)
                 {
                     for (double lambda = 0.01d; lambda < 10.25d; lambda *= 2d)
                     {
                         ThreadPool.QueueUserWorkItem(new WaitCallback((x) =>
                         {
-                            var ann = NeuralNetwork.ArtificialNeuralNetwork.Build(result.Item1, result.Item2, numberOfNeurons, epochs, lambda);
+                            double _lambda = lambda;
+                            int hln = numberOfNeurons;
+                            int eps = epochs;
+                            var ann = NeuralNetwork.ArtificialNeuralNetwork.Build(result.Item1, result.Item2, hln, eps, _lambda);
                             var learningResult = ann.Learn();
                         }));
                     }
@@ -37,7 +40,7 @@ namespace ArtificialNeuralNetwork
         {
             IParser parser = new StanfordLetterOCR();
             var result = parser.Read(@"DataSets\letter.data");
-            var ann = NeuralNetwork.ArtificialNeuralNetwork.Build(result.Item1, result.Item2);
+            var ann = NeuralNetwork.ArtificialNeuralNetwork.Build(result.Item1, result.Item2, 50, 100, 0.16d);
             var learningResult = ann.Learn();
         }
     }

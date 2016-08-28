@@ -121,7 +121,7 @@ namespace NeuralNetwork
             Logger.Finish();
             weights = result.ReshapeMatrices(weights.Item1.RowCount, weights.Item1.ColumnCount, weights.Item2.RowCount, weights.Item2.ColumnCount);
             double accuracy = CostFunctions.Sigmoid.CalculateAccuracy(TestSet, TestSetDesiredOutput, weights.Item1, weights.Item2);
-            return new CostGradientResult(CostGradientResult.History.Last(), result, accuracy);
+            return new CostGradientResult(0, result, accuracy);
         }
 
         void Ann_LearningEvent(int epoch, Options options, Vector<double> input, double cost)
