@@ -30,7 +30,7 @@ namespace NeuralNetwork
         public static int GetSizeFromPercentage<T>(this Matrix<T> matrix, double percentage)
             where T : struct, IEquatable<T>, IFormattable
         {
-            return (int)Math.Floor(matrix.RowCount / percentage);
+            return (int)Math.Floor(matrix.RowCount * percentage);
         }
 
         public static Matrix<double> Random(this MatrixBuilder<double> builder, int rows, int columns)

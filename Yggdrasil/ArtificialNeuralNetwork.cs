@@ -15,7 +15,7 @@ namespace NeuralNetwork
         int Epochs { get; }
         double Lambda { get; }
         Lazy<ANNLogger> logger = new Lazy<ANNLogger>(() => new ANNLogger(
-            String.Format("{0} - {1}.json", DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"), System.Threading.Thread.CurrentThread)));
+            String.Format("{0} - {1}.json", DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"), System.Threading.Thread.CurrentThread.ManagedThreadId)));
         ANNLogger Logger
         {
             get
@@ -49,7 +49,7 @@ namespace NeuralNetwork
 
         ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, int hiddenLayer, int epochs, double lambda)
         {
-            var testSetIndexes = Utility.UniqueRandomArray(set.RowCount - 1, set.GetSizeFromPercentage(30d));
+            var testSetIndexes = Utility.UniqueRandomArray(set.RowCount - 1, set.GetSizeFromPercentage(0.3d));
             var sets = set.Split(testSetIndexes);
             TrainingSet = sets.Item1;
             TestSet = sets.Item2;
