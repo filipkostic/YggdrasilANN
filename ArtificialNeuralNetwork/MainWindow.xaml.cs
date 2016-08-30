@@ -1,5 +1,6 @@
 ﻿using ArtificialNeuralNetwork.Parsers;
 using MathNet.Numerics.LinearAlgebra;
+using System;
 using System.Threading;
 using System.Windows;
 
@@ -12,31 +13,30 @@ namespace ArtificialNeuralNetwork
             InitializeComponent();
         }
 
-        private void TrainMany_Click(object sender, RoutedEventArgs e)
+        void TrainMany_Click(object sender, RoutedEventArgs e)
         {
             ThreadPool.SetMaxThreads(20, 1);
             IParser parser = new StanfordLetterOCR();
             var result = parser.Read(@"DataSets\letter.data");
-            for (int epochs = 50; epochs < 100; epochs += 10)
+            for (int epochs = 30; epochs <= 100; epochs += 10)
             {
-                for (int numberOfNeurons = 15; numberOfNeurons < 105; numberOfNeurons += 5)
+                for (int numberOfNeurons = 15; numberOfNeurons <= 100 ; numberOfNeurons += 5)
                 {
-                    for (double lambda = 0.01d; lambda < 10.25d; lambda *= 2d)
+                    for (double lambda = 0.01d; lambda <= 10.25d; lambda *= 2d)
                     {
-                        ThreadPool.QueueUserWorkItem(new WaitCallback((x) =>
-                        {
-                            double _lambda = lambda;
-                            int hln = numberOfNeurons;
-                            int eps = epochs;
-                            var ann = NeuralNetwork.ArtificialNeuralNetwork.Build(result.Item1, result.Item2, hln, eps, _lambda);
-                            var learningResult = ann.Learn();
-                        }));
+                        ThreadPool.QueueUserWorkItem(new WaitCallback(x => ANN_Worker(lambda, numberOfNeurons, epochs, result)));
                     }
                 }
             }
         }
 
-        private void TrainOne_Click(object sender, RoutedEventArgs e)
+        void ANN_Worker(double lambda, int hln, int epochs, Tuple<Matrix<double>, Matrix<double>> set)
+        {
+            var ann = NeuralNetwork.ArtificialNeuralNetwork.Build(set.Item1, set.Item2, hln, epochs, lambda);
+            var learningResult = ann.Learn();
+        }
+
+        void TrainOne_Click(object sender, RoutedEventArgs e)
         {
             IParser parser = new StanfordLetterOCR();
             var result = parser.Read(@"DataSets\letter.data");
