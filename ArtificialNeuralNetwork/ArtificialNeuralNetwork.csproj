@@ -93,6 +93,10 @@
       <HintPath>..\packages\MathNet.Numerics.3.12.0\lib\net40\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Sparrow.Chart.Wpf.40, Version=13.1.0.118, Culture=neutral, PublicKeyToken=50f33fb8697e9a92, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sparrow.Chart.Wpf.13.1.0.118\lib\net40\Sparrow.Chart.Wpf.40.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Numerics" />
@@ -122,12 +126,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Charting\ChartViewModel.cs" />
+    <Compile Include="Charting\Point.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MainWindowCharts.cs" />
+    <Compile Include="MainWindowTraining.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -163,6 +171,10 @@
     <ProjectReference Include="..\ContentParsers\ContentParsers.csproj">
       <Project>{84481de7-4c9c-4e61-8306-7533d59e8d8d}</Project>
       <Name>ContentParsers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logger\Logger.csproj">
+      <Project>{763ee360-c9a8-40e4-9988-e5b2e3ab88ec}</Project>
+      <Name>Logger</Name>
     </ProjectReference>
     <ProjectReference Include="..\Yggdrasil\NeuralNetwork.csproj">
       <Project>{994a8c38-e866-4a66-8e3f-9e8535a7ec2c}</Project>

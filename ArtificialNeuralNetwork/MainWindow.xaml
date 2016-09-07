@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sparrow="http://sparrowtoolkit.codeplex.com/wpf"
         xmlns:local="clr-namespace:ArtificialNeuralNetwork"
         mc:Ignorable="d"
         Title="Artificial neural networks - Training" Height="350" Width="557.729">
@@ -80,9 +81,107 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Statistics">
-                
+                <Grid Loaded="Grid_Loaded">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Log path:"/>
+                    <TextBlock Name="LogPath" Grid.Column="1" Grid.ColumnSpan="2"/>
+                    <Button Name="LogPathButton" Grid.Row="1" Grid.ColumnSpan="3" Content="Select log path" Click="LogPathButton_Click" Margin="5"/>
+                    <sparrow:SparrowChart Name="PlotMapCostEpoch" Theme="Forest" Grid.Row="2" Grid.ColumnSpan="2" Margin="10" Visibility="Hidden">
+                        <sparrow:SparrowChart.XAxis>
+                            <sparrow:LinearXAxis Interval="10"/>
+                        </sparrow:SparrowChart.XAxis>
+                        <sparrow:SparrowChart.YAxis>
+                            <sparrow:LinearYAxis/>
+                        </sparrow:SparrowChart.YAxis>
+                        <sparrow:LineSeries Name="Series01" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="5 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series02" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="10 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series03" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="15 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series04" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="20 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series05" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="25 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series06" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="30 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series07" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="35 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series08" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="40 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series09" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="45 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series10" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="50 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series11" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="55 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series12" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="60 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series13" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="65 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series14" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="70 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series15" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="75 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series16" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="80 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series17" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="85 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series18" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="90 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series19" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="95 hidden neurons"/>
+                        <sparrow:LineSeries Name="Series20" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="100 hidden neurons"/>
+                    </sparrow:SparrowChart>
+                    <sparrow:SparrowChart Name="PlotMapAccuracyEpoch" Theme="Forest" Grid.Row="2" Grid.ColumnSpan="2" Margin="10" Visibility="Hidden">
+                        <sparrow:SparrowChart.XAxis>
+                            <sparrow:LinearXAxis Interval="10"/>
+                        </sparrow:SparrowChart.XAxis>
+                        <sparrow:SparrowChart.YAxis>
+                            <sparrow:LinearYAxis/>
+                        </sparrow:SparrowChart.YAxis>
+                        <sparrow:LineSeries Name="AccuracySeries01" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="5 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries02" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="10 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries03" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="15 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries04" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="20 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries05" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="25 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries06" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="30 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries07" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="35 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries08" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="40 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries09" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="45 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries10" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="50 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries11" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="55 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries12" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="60 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries13" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="65 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries14" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="70 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries15" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="75 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries16" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="80 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries17" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="85 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries18" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="90 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries19" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="95 hidden neurons"/>
+                        <sparrow:LineSeries Name="AccuracySeries20" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="100 hidden neurons"/>
+                    </sparrow:SparrowChart>
+
+                    <sparrow:SparrowChart Name="PlotMapCostLambda" Theme="Forest" Grid.Row="2" Grid.ColumnSpan="2" Margin="10" Visibility="Hidden">
+                        <sparrow:SparrowChart.XAxis>
+                            <sparrow:LinearXAxis/>
+                        </sparrow:SparrowChart.XAxis>
+                        <sparrow:SparrowChart.YAxis>
+                            <sparrow:LinearYAxis Interval="0.05"/>
+                        </sparrow:SparrowChart.YAxis>
+                        <sparrow:AreaSeries Name="LambdaSeriesMinCost" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="Min Cost"/>
+                        <sparrow:AreaSeries Name="LambdaSeriesMaxAccuracy" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="Max Accuracy"/>
+                        <sparrow:AreaSeries Name="LambdaSeriesMinCostAccuracy" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="Min Cost Accuracy"/>
+                        <sparrow:AreaSeries Name="LambdaSeriesMaxAccuracyCost" PointsSource="{Binding Collection}" XPath="X" YPath="Y" Label="Max Accuracy Cost"/>
+                    </sparrow:SparrowChart>
+                    <sparrow:SparrowChart Name="PlotMapCostEpochIdeal" Theme="Forest" Grid.Row="2" Grid.ColumnSpan="2" Margin="10" Visibility="Hidden">
+                        <sparrow:SparrowChart.XAxis>
+                            <sparrow:LinearXAxis Interval="10"/>
+                        </sparrow:SparrowChart.XAxis>
+                        <sparrow:SparrowChart.YAxis>
+                            <sparrow:LinearYAxis Interval="0.5"/>
+                        </sparrow:SparrowChart.YAxis>
+                        <sparrow:AreaSeries Name="IdealExampleCostSeries" Label="Cost"  PointsSource="{Binding Collection}" XPath="X" YPath="Y"/>
+                        <sparrow:AreaSeries Name="IdealExampleAccuracySeries" Label="Accuracy"  PointsSource="{Binding Collection}" XPath="X" YPath="Y" />
+                    </sparrow:SparrowChart>
+                    <StackPanel Grid.Row="2" Grid.Column="2" Margin="10">
+                        <RadioButton Name="CostEpochs"  Content="Cost by Epochs" Checked="CostEpochs_Checked" />
+                        <RadioButton Name="AccuracyEpochs" Content="Accuracy by Epochs" Checked="AccuracyEpochs_Checked"/>
+                        <RadioButton Name="CostLambda" Content="Cost by Lambda" Checked="CostLambda_Checked"/>
+                        <RadioButton Name="IdealExample" Content="Ideal example" Checked="IdealExample_Checked"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
         </TabControl>
-        
     </Grid>
 </Window>
