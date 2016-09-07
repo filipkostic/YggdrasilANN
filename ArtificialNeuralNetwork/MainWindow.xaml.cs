@@ -3,6 +3,7 @@ using System;
 using System.Threading;
 using System.Windows;
 using ContentParsers;
+using Microsoft.Win32;
 
 namespace ArtificialNeuralNetwork
 {
@@ -15,14 +16,24 @@ namespace ArtificialNeuralNetwork
 
         void TrainMany_Click(object sender, RoutedEventArgs e)
         {
-            ThreadPool.SetMaxThreads(20, 25);
-            IParser parser = new StanfordLetterOCR();
-            var result = parser.Read(@"DataSets\letter.data");
-            for (int epochs = 30; epochs <= 100; epochs += 10)
+            int fromEpochs = 0, toEpochs = 0, fromHln = 0, toHln = 0;
+            double fromLambda = 0d, toLambda = 0d;
+            bool success = Int32.TryParse(tbxFromEpochs.Text.Trim(), out fromEpochs)
+                && Int32.TryParse(tbxToEpochs.Text.Trim(), out toEpochs)
+                && Int32.TryParse(tbxFromNeurons.Text.Trim(), out fromHln)
+                && Int32.TryParse(tbxToNeurons.Text.Trim(), out toHln)
+                && Double.TryParse(tbxFromLambda.Text.Trim(), out fromLambda)
+                && Double.TryParse(tbxToLambda.Text.Trim(), out toLambda);
+            if (!success)
             {
-                for (int numberOfNeurons = 15; numberOfNeurons <= 100 ; numberOfNeurons += 5)
+                return;
+            }
+            var result = LoadData(@"DataSets\letter.data");
+            for (int epochs = fromEpochs; epochs <= toEpochs; epochs += 10)
+            {
+                for (int numberOfNeurons = fromHln; numberOfNeurons <= toHln ; numberOfNeurons += 5)
                 {
-                    for (double lambda = 0.01d; lambda <= 10.25d; lambda *= 2d)
+                    for (double lambda = fromLambda; lambda <= toLambda; lambda *= 2d)
                     {
                         ThreadPool.QueueUserWorkItem(new WaitCallback(x => ANN_Worker(lambda, numberOfNeurons, epochs, result)));
                     }
@@ -38,10 +49,46 @@ namespace ArtificialNeuralNetwork
 
         void TrainOne_Click(object sender, RoutedEventArgs e)
         {
+            int epochs = 0, hln = 0;
+            double lambda = 0d;
+            bool success = Int32.TryParse(tbxEpochs.Text.Trim(), out epochs)
+                && Int32.TryParse(tbxNeurons.Text.Trim(), out hln)
+                && Double.TryParse(tbxLambda.Text.Trim(), out lambda);
+            if (!success)
+            {
+                return;
+            }
+            var result = LoadData(@"DataSets\letter.data");
+            ANN_Worker(lambda, hln, epochs, result);
+        }
+
+        Tuple<Matrix<double>, Matrix<double>> LoadData(string path)
+        {
             IParser parser = new StanfordLetterOCR();
-            var result = parser.Read(@"DataSets\letter.data");
-            var ann = NeuralNetwork.ArtificialNeuralNetwork.Build(result.Item1, result.Item2, 50, 100, 0.16d);
-            var learningResult = ann.Learn();
+            return parser.Read(@"DataSets\letter.data");
+        }
+
+        void btnPickTrainingDataMany_Click(object sender, RoutedEventArgs e)
+        {
+            tbxTrainingPathMany.Text = PickFile();
+        }
+
+        void btnPickTrainingData_Click(object sender, RoutedEventArgs e)
+        {
+            tbxTrainingPath.Text = PickFile();
+        }
+
+        string PickFile()
+        {
+            var filePicker = new OpenFileDialog();
+            filePicker.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory + @"DataSets\";
+            filePicker.Filter = "Data (.data)|*.data|Text (.txt)|*.txt|Comma separated (.csv)|*.csv";
+            var result = filePicker.ShowDialog();
+            if (result == true)
+            {
+                return filePicker.FileName;
+            }
+            return String.Empty;
         }
     }
 }
