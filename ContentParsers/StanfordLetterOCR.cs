@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ArtificialNeuralNetwork.Parsers
+namespace ContentParsers
 {
-    class StanfordLetterOCR : IParser
+    public class StanfordLetterOCR : IParser
     {
         readonly char[] SplitCharacters = { '\t' };
         readonly int[] UnnecessaryColumns = { 0, 1, 2, 3, 4, 5 };

@@ -1,8 +1,8 @@
-﻿using ArtificialNeuralNetwork.Parsers;
-using MathNet.Numerics.LinearAlgebra;
+﻿using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Threading;
 using System.Windows;
+using ContentParsers;
 
 namespace ArtificialNeuralNetwork
 {
@@ -15,7 +15,7 @@ namespace ArtificialNeuralNetwork
 
         void TrainMany_Click(object sender, RoutedEventArgs e)
         {
-            ThreadPool.SetMaxThreads(20, 1);
+            ThreadPool.SetMaxThreads(20, 25);
             IParser parser = new StanfordLetterOCR();
             var result = parser.Read(@"DataSets\letter.data");
             for (int epochs = 30; epochs <= 100; epochs += 10)
