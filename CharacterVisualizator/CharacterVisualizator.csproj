@@ -107,6 +107,14 @@
       <Project>{84481de7-4c9c-4e61-8306-7533d59e8d8d}</Project>
       <Name>ContentParsers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Logger\Logger.csproj">
+      <Project>{763ee360-c9a8-40e4-9988-e5b2e3ab88ec}</Project>
+      <Name>Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Yggdrasil\NeuralNetwork.csproj">
+      <Project>{994a8c38-e866-4a66-8e3f-9e8535a7ec2c}</Project>
+      <Name>NeuralNetwork</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

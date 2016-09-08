@@ -87,13 +87,11 @@ namespace Logger
 
         public static List<ANNLogItem> ReadLogFile(string logFilePath)
         {
-            List<ANNLogItem> log;
             using (var stream = new FileStream(logFilePath, FileMode.Open))
             {
                 var serializer = new DataContractJsonSerializer(typeof(List<ANNLogItem>));
-                log = (List<ANNLogItem>)serializer.ReadObject(stream);
+                return (List<ANNLogItem>)serializer.ReadObject(stream);
             }
-            return log;
         }
     }
 }

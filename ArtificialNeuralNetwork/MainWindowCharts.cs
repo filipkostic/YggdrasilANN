@@ -18,7 +18,7 @@ namespace ArtificialNeuralNetwork
             LogItems = new List<List<Logger.ANNLogItem>>();
             InitializeLegend(PlotMapCostEpoch, "Cost by epochs");
             InitializeLegend(PlotMapCostLambda, "Cost by lambda");
-            InitializeLegend(PlotMapCostEpochIdeal, "Cost/Accuracy for 25 hidden neurons and lambda ≈ 1");
+            InitializeLegend(PlotMapCostEpochIdeal, "Cost/Accuracy for 40 hidden neurons and lambda ≈ 2");
             InitializeLegend(PlotMapAccuracyEpoch, "Accuracy by epochs");
         }
 
@@ -186,6 +186,7 @@ namespace ArtificialNeuralNetwork
         static string PickLogFile()
         {
             var dialog = new OpenFileDialog();
+            dialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory + @"Log\";
             dialog.Filter = "Log file (.json)|*.json";
             dialog.RestoreDirectory = true;
             dialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -205,18 +206,15 @@ namespace ArtificialNeuralNetwork
         void CostEpochs_Checked(object sender, RoutedEventArgs e)
         {
             if (LogItems == null) return;
-            foreach (var item in ViewModels)
-            {
-                item.Value.Collection.Clear();
-            }
+            ClearViewModel();
             PlotMapCostEpoch.XAxis.ShowCrossLines = true;
             PlotMapCostEpoch.XAxis.Header = "Epochs";
             PlotMapCostEpoch.YAxis.ShowCrossLines = true;
             PlotMapCostEpoch.YAxis.Header = "Cost";
-            var filter = BestLogItem.Where(x => x.Lambda < 2 && x.Lambda >= 1);
+            var filter = BestLogItem;
             foreach (var item in filter)
             {
-                ViewModels.Add(item.NumberOfHiddenNeurons, new ChartViewModel());
+                ViewModels[item.NumberOfHiddenNeurons] = new ChartViewModel();
 
                 AssignModelToCostEpochView(item);
                 for (int epoch = 0; epoch < item.Epochs.Count; ++epoch)
@@ -231,12 +229,12 @@ namespace ArtificialNeuralNetwork
         void CostLambda_Checked(object sender, RoutedEventArgs e)
         {
             if (LogItems == null) return;
+            ClearViewModel();
             PlotMapCostLambda.XAxis.ShowCrossLines = true;
             PlotMapCostLambda.XAxis.Header = "Lambda";
             PlotMapCostLambda.YAxis.ShowCrossLines = true;
             PlotMapCostLambda.YAxis.Header = "Cost/Accuracy";
             var filter = BestLogItem
-                .Where(x => x.NumberOfHiddenNeurons == 25)
                 .OrderBy(x => x.Lambda)
                 .ToList();
             var minCost = new ChartViewModel();
@@ -270,11 +268,12 @@ namespace ArtificialNeuralNetwork
         void IdealExample_Checked(object sender, RoutedEventArgs e)
         {
             if (LogItems == null) return;
+            ClearViewModel();
             PlotMapCostEpochIdeal.XAxis.ShowCrossLines = true;
             PlotMapCostEpochIdeal.XAxis.Header = "Epoch";
             PlotMapCostEpochIdeal.YAxis.ShowCrossLines = true;
             PlotMapCostEpochIdeal.YAxis.Header = "Cost/Accuracy";
-            var filter = BestLogItem/*.Where(x => x.Lambda < 2 && x.Lambda >= 1 && x.NumberOfHiddenNeurons == 25)*/.FirstOrDefault();
+            var filter = BestLogItem.FirstOrDefault();
 
             var cost = new ChartViewModel();
             var accuracy = new ChartViewModel();
@@ -294,18 +293,15 @@ namespace ArtificialNeuralNetwork
         void AccuracyEpochs_Checked(object sender, RoutedEventArgs e)
         {
             if (LogItems == null) return;
-            foreach (var item in ViewModels)
-            {
-                item.Value.Collection.Clear();
-            }
+            ClearViewModel();
             PlotMapAccuracyEpoch.XAxis.ShowCrossLines = true;
             PlotMapAccuracyEpoch.XAxis.Header = "Epochs";
             PlotMapAccuracyEpoch.YAxis.ShowCrossLines = true;
             PlotMapAccuracyEpoch.YAxis.Header = "Accuracy";
-            var filter = BestLogItem;//.Where(x => x.Lambda < 2 && x.Lambda >= 1);
+            var filter = BestLogItem;
             foreach (var item in filter)
             {
-                ViewModels.Add(item.NumberOfHiddenNeurons, new ChartViewModel());
+                ViewModels[item.NumberOfHiddenNeurons] = new ChartViewModel();
 
                 AssignModelToAccuracyEpochView(item);
                 for (int epoch = 0; epoch < item.Epochs.Count; ++epoch)
@@ -328,6 +324,14 @@ namespace ArtificialNeuralNetwork
         Visibility ToggleChartVisibility(SparrowChart chart, SparrowChart toggle)
         {
             return chart == toggle ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        void ClearViewModel()
+        {
+            foreach (var item in ViewModels)
+            {
+                item.Value.Collection.Clear();
+            }
         }
     }
 }

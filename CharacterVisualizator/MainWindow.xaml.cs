@@ -1,5 +1,9 @@
-﻿using System.Windows;
+﻿using Microsoft.Win32;
+using System;
+using System.Windows;
 using System.Windows.Controls;
+using Logger;
+using System.Collections.Generic;
 
 namespace CharacterVisualizator
 {
@@ -11,6 +15,7 @@ namespace CharacterVisualizator
         }
 
         bool CanvasLoaded = false;
+        private List<ANNLogItem> LogItem;
 
         private void VisualizatorCanvas_Loaded(object sender, RoutedEventArgs e)
         {
@@ -48,6 +53,34 @@ namespace CharacterVisualizator
             Canvas.SetLeft(image, i * 8 + 5);
             Canvas.SetTop(image, j * 16 + 2);
             VisualizatorCanvas.Children.Add(image);
+        }
+
+        void btnSelectLog_Click(object sender, RoutedEventArgs e)
+        {
+            string filename = PickFile();
+            if (String.IsNullOrEmpty(filename))
+            {
+                return;
+            }
+            LogItem = ANNLogger.ReadLogFile(filename);
+        }
+
+        string PickFile()
+        {
+            var filePicker = new OpenFileDialog();
+            filePicker.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory + @"Log\";
+            filePicker.Filter = "Log (.json)|*.json";
+            var result = filePicker.ShowDialog();
+            if (result == true)
+            {
+                return filePicker.FileName;
+            }
+            return String.Empty;
+        }
+
+        void btnCheck_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

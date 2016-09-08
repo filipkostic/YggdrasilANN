@@ -16,7 +16,49 @@
                 </Canvas>
             </TabItem>
             <TabItem  TabIndex="1" Header="Test">
-
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Log:" 
+                               Grid.Row="1" Grid.Column="0" />
+                    <TextBox Name="tbxLogFilePath"
+                             Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                             Margin="2" IsReadOnly="True" />
+                    <Button Name="btnSelectLog" Content="Find" Padding="5,0,5,0"
+                            Grid.Row="1" Grid.Column="3"
+                            Margin="2" Click="btnSelectLog_Click" />
+                    <Border Grid.Row="2" Grid.Column="1" Grid.RowSpan="2"
+                            Width="200" Height="200" BorderThickness="1"
+                            BorderBrush="Black" >
+                        <InkCanvas Name="DrawingTable">
+                            <InkCanvas.DefaultDrawingAttributes>
+                                <DrawingAttributes Color="Black"
+                                       FitToCurve="False"
+                                       Height="20"
+                                       Width="20"
+                                       StylusTip="Ellipse" />
+                            </InkCanvas.DefaultDrawingAttributes>
+                        </InkCanvas>
+                    </Border>
+                    <TextBlock Name="DiscoveredLetter" 
+                               Text="-" FontSize="90"
+                               Grid.Row="2" Grid.Column="2"  />
+                    <StackPanel Grid.Row="3" Grid.Column="2">
+                        <Button Name="btnClear" Content="Clear" Margin="2" Padding="5,0,5,0" />
+                        <Button Name="btnCheck" Content="Check" Margin="2" Padding="5,0,5,0" Click="btnCheck_Click"  />
+                    </StackPanel>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
