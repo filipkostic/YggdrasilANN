@@ -38,7 +38,7 @@ namespace ArtificialNeuralNetwork
 
         void ANN_Worker(double lambda, int hln, int epochs, Tuple<Matrix<double>, Matrix<double>> set)
         {
-            var ann = NeuralNetwork.ArtificialNeuralNetwork.Build(set.Item1, set.Item2, hln, epochs, lambda);
+            var ann = NeuralNetwork.ArtificialNeuralNetwork.Build(set.Item1, set.Item2, hln, epochs, lambda, NeuralNetwork.CostFunctionTypes.Sigmoid);
             var learningResult = ann.Learn();
         }
 

@@ -26,5 +26,7 @@ namespace Logger
         public double TrainingTimeInMilliseconds { get; set; }
         [DataMember]
         public int NumberOfHiddenNeurons { get; set; }
+        [DataMember]
+        public double[] Weights { get; set; }
     }
 }

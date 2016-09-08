@@ -64,6 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArtificialNeuralNetwork.cs" />
+    <Compile Include="CostFunctions\CostFunction.cs" />
+    <Compile Include="CostFunctions\CostFunctionTypes.cs" />
+    <Compile Include="CostFunctions\ICostFunction.cs" />
     <Compile Include="CostFunctions\Sigmoid.cs" />
     <Compile Include="CostGradientResult.cs" />
     <Compile Include="DataSet.cs" />

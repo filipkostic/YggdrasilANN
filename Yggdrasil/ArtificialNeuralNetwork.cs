@@ -2,6 +2,7 @@
 using System;
 using Logger;
 using System.Linq;
+using NeuralNetwork.CostFunctions;
 
 namespace NeuralNetwork
 {
@@ -14,6 +15,7 @@ namespace NeuralNetwork
         int NeuronsInHiddenLayer { get; }
         int Epochs { get; }
         double Lambda { get; }
+        ICostFunction CostFunction { get; }
         Lazy<ANNLogger> logger = new Lazy<ANNLogger>(() => new ANNLogger(
             String.Format("{0} - {1}.json", DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"), System.Threading.Thread.CurrentThread.ManagedThreadId)));
         ANNLogger Logger
@@ -24,7 +26,7 @@ namespace NeuralNetwork
             }
         }
 
-        ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput, int hiddenLayer, int epochs, double lambda)
+        ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput, int hiddenLayer, int epochs, double lambda, CostFunctionTypes costFunction)
         {
             TrainingSet = set;
             TrainingSetDesiredOutput = desiredOutput;
@@ -33,21 +35,22 @@ namespace NeuralNetwork
             NeuronsInHiddenLayer = hiddenLayer;
             Epochs = epochs;
             Lambda = lambda;
+            CostFunction = CostFunctions.CostFunction.Build(costFunction);
         }
 
-        ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput, int hiddenLayer, int epochs)
-            : this(set, desiredOutput, testSet, testSetDesiredOutput, hiddenLayer, epochs, 1d)
+        ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput, int hiddenLayer, int epochs, CostFunctionTypes costFunction)
+            : this(set, desiredOutput, testSet, testSetDesiredOutput, hiddenLayer, epochs, 1d, costFunction)
         {
 
         }
 
-        ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput)
-            : this(set, desiredOutput, testSet, testSetDesiredOutput, 25, 50)
+        ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput, CostFunctionTypes costFunction)
+            : this(set, desiredOutput, testSet, testSetDesiredOutput, 25, 50, costFunction)
         {
 
         }
 
-        ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, int hiddenLayer, int epochs, double lambda)
+        ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, int hiddenLayer, int epochs, double lambda, CostFunctionTypes costFunction)
         {
             var testSetIndexes = Utility.UniqueRandomArray(set.RowCount - 1, set.GetSizeFromPercentage(0.3d));
             var sets = set.Split(testSetIndexes);
@@ -59,43 +62,44 @@ namespace NeuralNetwork
             NeuronsInHiddenLayer = hiddenLayer;
             Epochs = epochs;
             Lambda = lambda;
+            CostFunction = CostFunctions.CostFunction.Build(costFunction);
         }
 
-        ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, int hiddenLayer, int epochs)
-            : this(set, desiredOutput, hiddenLayer, epochs, 1d)
+        ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput, int hiddenLayer, int epochs, CostFunctionTypes costFunction)
+            : this(set, desiredOutput, hiddenLayer, epochs, 1d, costFunction)
         {
 
         }
 
         ArtificialNeuralNetwork(Matrix<double> set, Matrix<double> desiredOutput)
-            : this(set, desiredOutput, 25, 50)
+            : this(set, desiredOutput, 25, 50, CostFunctionTypes.Sigmoid)
         {
 
         }
 
-        public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput, int hiddenLayer, int epochs, double lambda)
+        public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput, int hiddenLayer, int epochs, double lambda, CostFunctionTypes costFunction)
         {
-            return new ArtificialNeuralNetwork(set, desiredOutput, testSet, testSetDesiredOutput, hiddenLayer, epochs, lambda);
+            return new ArtificialNeuralNetwork(set, desiredOutput, testSet, testSetDesiredOutput, hiddenLayer, epochs, lambda, costFunction);
         }
 
-        public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput, int hiddenLayer, int epochs)
+        public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput, int hiddenLayer, int epochs, CostFunctionTypes costFunction)
         {
-            return new ArtificialNeuralNetwork(set, desiredOutput, testSet, testSetDesiredOutput, hiddenLayer, epochs);
+            return new ArtificialNeuralNetwork(set, desiredOutput, testSet, testSetDesiredOutput, hiddenLayer, epochs, costFunction);
         }
 
-        public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput)
+        public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput, Matrix<double> testSet, Matrix<double> testSetDesiredOutput, CostFunctionTypes costFunction)
         {
-            return new ArtificialNeuralNetwork(set, desiredOutput, testSet, testSetDesiredOutput);
+            return new ArtificialNeuralNetwork(set, desiredOutput, testSet, testSetDesiredOutput, costFunction);
         }
 
-        public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput, int hiddenLayer, int epochs, double lambda)
+        public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput, int hiddenLayer, int epochs, double lambda, CostFunctionTypes costFunction)
         {
-            return new ArtificialNeuralNetwork(set, desiredOutput, hiddenLayer, epochs, lambda);
+            return new ArtificialNeuralNetwork(set, desiredOutput, hiddenLayer, epochs, lambda, costFunction);
         }
 
-        public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput, int hiddenLayer, int epochs)
+        public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput, int hiddenLayer, int epochs, CostFunctionTypes costFunction)
         {
-            return new ArtificialNeuralNetwork(set, desiredOutput, hiddenLayer, epochs);
+            return new ArtificialNeuralNetwork(set, desiredOutput, hiddenLayer, epochs, costFunction);
         }
 
         public static ArtificialNeuralNetwork Build(Matrix<double> set, Matrix<double> desiredOutput)
@@ -105,12 +109,11 @@ namespace NeuralNetwork
 
         public ICostGradientResult Learn()
         {
-            var ann = Fmincg.Build;
+            var ann = Fmincg.Build(CostFunction);
             ann.LearningEvent += Ann_LearningEvent;
             var weights = InitializeWeightLayers();
             Logger.Start(TrainingSet.RowCount, TestSet.RowCount, Epochs, Lambda, NeuronsInHiddenLayer, "sigmoid");
             var result = ann.MinimizeFunction(
-                CostFunctions.Sigmoid.CostAndGradient,
                 MatrixUtility.UnrollMatrices(weights.Item1, weights.Item2),
                 new Options(
                     new DataSet(TrainingSet, TrainingSetDesiredOutput),
@@ -118,16 +121,16 @@ namespace NeuralNetwork
                     weights,
                     Epochs,
                     Lambda));
-            Logger.Finish();
+            Logger.Finish(result.ToArray());
             weights = result.ReshapeMatrices(weights.Item1.RowCount, weights.Item1.ColumnCount, weights.Item2.RowCount, weights.Item2.ColumnCount);
-            double accuracy = CostFunctions.Sigmoid.CalculateAccuracy(TestSet, TestSetDesiredOutput, weights.Item1, weights.Item2);
+            double accuracy = CostFunction.CalculateAccuracy(TestSet, TestSetDesiredOutput, weights.Item1, weights.Item2);
             return new CostGradientResult(0, result, accuracy);
         }
 
         void Ann_LearningEvent(int epoch, Options options, Vector<double> input, double cost)
         {
             var weights = input.ReshapeMatrices(options.Weights.Item1.RowCount, options.Weights.Item1.ColumnCount, options.Weights.Item2.RowCount, options.Weights.Item2.ColumnCount);
-            double accuracy = CostFunctions.Sigmoid.CalculateAccuracy(options.Test.Set, options.Test.Desired, weights.Item1, weights.Item2);
+            double accuracy = CostFunction.CalculateAccuracy(options.Test.Set, options.Test.Desired, weights.Item1, weights.Item2);
             Logger.AddEpoch(epoch, cost, accuracy);
         }
 

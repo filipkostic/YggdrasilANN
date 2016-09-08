@@ -1,24 +1,22 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using NeuralNetwork.CostFunctions;
 using System;
 
 namespace NeuralNetwork
 {
     class Fmincg
     {
-        Fmincg()
+        Fmincg(ICostFunction costFunction)
         {
-
+            CostFunction = costFunction;
         }
 
-        public static Fmincg Build
+        public static Fmincg Build(ICostFunction costFunction)
         {
-            get
-            {
-                return new Fmincg();
-            }
+            return new Fmincg(costFunction);
         }
 
-        public delegate ICostGradientResult CostFunction(Matrix<double> inputWeights, Matrix<double> hiddenLayerWeights, Matrix<double> inputs, Matrix<double> desiredOutputs, double lambda);
+        readonly ICostFunction CostFunction;
         public delegate void LearningEventDelegate(int epoch, Options options, Vector<double> data, double cost);
         public event LearningEventDelegate LearningEvent;
 
@@ -30,18 +28,18 @@ namespace NeuralNetwork
         const int MAX = 20;
         const int RATIO = 100;
 
-        public Vector<double> MinimizeFunction(CostFunction costFunction, Vector<double> theta, Options options)
+        public Vector<double> MinimizeFunction(Vector<double> theta, Options options)
         {
-            return Minimize(costFunction, theta, options);
+            return Minimize(theta, options);
         }
 
-        Vector<double> Minimize(CostFunction costFunction, Vector<double> theta, Options options)
+        Vector<double> Minimize(Vector<double> theta, Options options)
         {
             Vector<double> input = theta;
             int currentEpoch = 0;
             int red = 1;
             int lineSearchFailures = 0;
-            ICostGradientResult evaluate = costFunction(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
+            ICostGradientResult evaluate = CostFunction.CostAndGradient(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
             double cost = evaluate.Cost;
             Vector<double> gradient = evaluate.Gradient;
             LearningEvent(currentEpoch, options, input, cost);
@@ -60,7 +58,7 @@ namespace NeuralNetwork
                 Vector<double> progressGradient = Vector<double>.Build.DenseOfVector(gradient);
                 input = input.Add(inverseGradient.Multiply(step));
                 options.Weights = input.ReshapeMatrices(options.Weights.Item1.RowCount, options.Weights.Item1.ColumnCount, options.Weights.Item2.RowCount, options.Weights.Item2.ColumnCount);
-                evaluate = costFunction(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
+                evaluate = CostFunction.CostAndGradient(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
                 double epochCost = evaluate.Cost;
                 Vector<double> innerGradient = evaluate.Gradient;
                 LearningEvent(currentEpoch, options, input, epochCost);
@@ -83,7 +81,7 @@ namespace NeuralNetwork
                         step = step + innerStep;
                         input = input.Add(inverseGradient.Multiply(innerStep));
                         options.Weights = input.ReshapeMatrices(options.Weights.Item1.RowCount, options.Weights.Item1.ColumnCount, options.Weights.Item2.RowCount, options.Weights.Item2.ColumnCount);
-                        evaluate = costFunction(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
+                        evaluate = CostFunction.CostAndGradient(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
                         epochCost = evaluate.Cost;
                         innerGradient = evaluate.Gradient;
                         LearningEvent(currentEpoch, options, input, epochCost);
@@ -113,7 +111,7 @@ namespace NeuralNetwork
                     step = step + epochStep;
                     input = input.Add(inverseGradient.Multiply(epochStep));
                     options.Weights = input.ReshapeMatrices(options.Weights.Item1.RowCount, options.Weights.Item1.ColumnCount, options.Weights.Item2.RowCount, options.Weights.Item2.ColumnCount);
-                    evaluate = costFunction(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
+                    evaluate = CostFunction.CostAndGradient(options.Weights.Item1, options.Weights.Item2, options.Training.Set, options.Training.Desired, options.Lambda);
                     epochCost = evaluate.Cost;
                     innerGradient = evaluate.Gradient;
                     LearningEvent(currentEpoch, options, input, epochCost);

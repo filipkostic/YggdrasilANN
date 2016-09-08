@@ -56,7 +56,7 @@ namespace Logger
         string LogFilePath;
         public bool LoggingInProgress { get; private set; }
 
-        public void Finish()
+        public void Finish(double[] weights)
         {
             if (!LoggingInProgress)
             {
@@ -66,6 +66,7 @@ namespace Logger
             EndTime = DateTime.Now;
             CurrentLogItem.TrainingTimeInMilliseconds = (EndTime - StartTime).TotalMilliseconds;
             LogItems.Add(CurrentLogItem);
+            CurrentLogItem.Weights = weights;
             CurrentLogItem = null;
             WriteToLogFile();
         }
