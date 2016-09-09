@@ -2,7 +2,7 @@
 
 namespace NeuralNetwork.CostFunctions
 {
-    class CostFunction
+    public class CostFunction
     {
         public static ICostFunction Build(CostFunctionTypes type)
         {

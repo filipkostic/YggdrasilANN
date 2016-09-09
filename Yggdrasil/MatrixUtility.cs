@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NeuralNetwork
 {
-    static class MatrixUtility
+    public static class MatrixUtility
     {
         public static Tuple<Matrix<T>, Matrix<T>> Split<T>(this Matrix<T> matrix, int[] indexes)
             where T : struct, IEquatable<T>, IFormattable

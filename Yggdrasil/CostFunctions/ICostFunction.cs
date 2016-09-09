@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NeuralNetwork.CostFunctions
 {
-    interface ICostFunction
+    public interface ICostFunction
     {
         ICostGradientResult CostAndGradient(Matrix<double> currentLayerWeights, Matrix<double> nextLayerWeights, Matrix<double> inputs, Matrix<double> desiredOutputs, double lambda);
         void FeedForward(Matrix<double> inputWeights, Matrix<double> hiddenLayerWeights, Matrix<double> inputs, int i, out Vector<double> a1, out Vector<double> z2, out Vector<double> a2, out Vector<double> a3);

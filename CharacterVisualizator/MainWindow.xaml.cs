@@ -4,6 +4,11 @@ using System.Windows;
 using System.Windows.Controls;
 using Logger;
 using System.Collections.Generic;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
+using NeuralNetwork;
 
 namespace CharacterVisualizator
 {
@@ -15,7 +20,7 @@ namespace CharacterVisualizator
         }
 
         bool CanvasLoaded = false;
-        private List<ANNLogItem> LogItem;
+        private List<ANNLogItem> LogItems;
 
         private void VisualizatorCanvas_Loaded(object sender, RoutedEventArgs e)
         {
@@ -62,7 +67,7 @@ namespace CharacterVisualizator
             {
                 return;
             }
-            LogItem = ANNLogger.ReadLogFile(filename);
+            LogItems = ANNLogger.ReadLogFile(filename);
         }
 
         string PickFile()
@@ -80,7 +85,38 @@ namespace CharacterVisualizator
 
         void btnCheck_Click(object sender, RoutedEventArgs e)
         {
+            var image = GetRawImage();
+            var imageManipulation = new ImageManipulation((int)DrawingTable.ActualWidth, (int)DrawingTable.ActualHeight, image);
+            LetterPreview.Children.Clear();
+            LetterPreview.Children.Add(new Image { Source = imageManipulation.TransformSize() });
+            var pixels = imageManipulation.GetBinaryPixels();
 
+            var costFunction = NeuralNetwork.CostFunctions.CostFunction.Build(CostFunctionTypes.Sigmoid);
+            var log = LogItems.OrderBy(x => x.Epochs.OrderBy(y => y.Accuracy).Last().Accuracy).Last();
+            var weights = Vector<double>.Build.DenseOfArray(log.Weights).ReshapeMatrices(log.NumberOfHiddenNeurons, 128, 26, log.NumberOfHiddenNeurons);
+        }
+
+        Image GetRawImage()
+        {
+            var picture = new RenderTargetBitmap((int)DrawingTable.ActualWidth, (int)DrawingTable.ActualHeight, 96, 96, PixelFormats.Default);
+            picture.Render(DrawingTable);
+            return new Image
+            {
+                Source = picture
+            };
+        }        
+
+        void btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            ClearDrawingTable();
+            DiscoveredLetter.Text = "-";
+        }
+
+        private void ClearDrawingTable()
+        {
+            DrawingTable.Children.Clear();
+            DrawingTable.Strokes.Clear();
+            LetterPreview.Children.Clear();
         }
     }
 }

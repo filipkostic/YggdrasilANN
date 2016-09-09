@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ContentParsers
 {
@@ -107,6 +108,7 @@ namespace ContentParsers
                 charactersAndIndexes[letter].Add(row);
             }
             ResetStream(stream);
+            charactersAndIndexes.OrderBy(x => x.Key);
             return charactersAndIndexes;
         }
     }

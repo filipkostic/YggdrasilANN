@@ -15,7 +15,7 @@
                     </Canvas.LayoutTransform>
                 </Canvas>
             </TabItem>
-            <TabItem  TabIndex="1" Header="Test">
+            <TabItem  TabIndex="1" Header="Test" IsSelected="True">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -39,14 +39,14 @@
                             Grid.Row="1" Grid.Column="3"
                             Margin="2" Click="btnSelectLog_Click" />
                     <Border Grid.Row="2" Grid.Column="1" Grid.RowSpan="2"
-                            Width="200" Height="200" BorderThickness="1"
+                            Width="80" Height="160" BorderThickness="1"
                             BorderBrush="Black" >
-                        <InkCanvas Name="DrawingTable">
+                        <InkCanvas Name="DrawingTable" Width="80" Height="160">
                             <InkCanvas.DefaultDrawingAttributes>
                                 <DrawingAttributes Color="Black"
                                        FitToCurve="False"
-                                       Height="20"
-                                       Width="20"
+                                       Height="10"
+                                       Width="10"
                                        StylusTip="Ellipse" />
                             </InkCanvas.DefaultDrawingAttributes>
                         </InkCanvas>
@@ -55,8 +55,12 @@
                                Text="-" FontSize="90"
                                Grid.Row="2" Grid.Column="2"  />
                     <StackPanel Grid.Row="3" Grid.Column="2">
-                        <Button Name="btnClear" Content="Clear" Margin="2" Padding="5,0,5,0" />
+                        <Button Name="btnClear" Content="Clear" Margin="2" Padding="5,0,5,0" Click="btnClear_Click"/>
                         <Button Name="btnCheck" Content="Check" Margin="2" Padding="5,0,5,0" Click="btnCheck_Click"  />
+                        <Border Width="10" Height="18" BorderThickness="1"
+                            BorderBrush="Black">
+                            <Canvas Name="LetterPreview"></Canvas>
+                        </Border>
                     </StackPanel>
                 </Grid>
             </TabItem>
