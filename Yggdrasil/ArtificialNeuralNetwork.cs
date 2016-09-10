@@ -1,7 +1,6 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
 using Logger;
-using System.Linq;
 using NeuralNetwork.CostFunctions;
 
 namespace NeuralNetwork

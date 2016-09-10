@@ -18,7 +18,6 @@ namespace ArtificialNeuralNetwork
             LogItems = new List<List<Logger.ANNLogItem>>();
             InitializeLegend(PlotMapCostEpoch, "Cost by epochs");
             InitializeLegend(PlotMapCostLambda, "Cost by lambda");
-            InitializeLegend(PlotMapCostEpochIdeal, "Cost/Accuracy for 40 hidden neurons and lambda ≈ 2");
             InitializeLegend(PlotMapAccuracyEpoch, "Accuracy by epochs");
         }
 
@@ -40,12 +39,12 @@ namespace ArtificialNeuralNetwork
                 LogItems.Add(Logger.ANNLogger.ReadLogFile(file));
             }
             var best = LogItems.Select(x => x.OrderBy(y => y.Epochs.Max(z => z.Accuracy)).Last());
-            var item = best.OrderBy(x => x.Epochs.Max(y => y.Accuracy)).Last();
-            BestLogItem = best.ToList();
-            var epoch = item.Epochs.OrderBy(x => x.Accuracy).Last();
-            MessageBox.Show("The best accuracy is achieved by the combination:\nHidden neurons:\t" + item.NumberOfHiddenNeurons
-                + "\nLambda:\t" + item.Lambda
-                + "\nEpoch:\t" + item.Epochs.IndexOf(epoch) + " of " + item.Epochs.Count
+            BestLogItem = best.OrderBy(x => x.Epochs.Max(y => y.Accuracy)).Last();
+            BestLogItems = best.ToList();
+            var epoch = BestLogItem.Epochs.OrderBy(x => x.Accuracy).Last();
+            MessageBox.Show("The best accuracy is achieved by the combination:\nHidden neurons:\t" + BestLogItem.NumberOfHiddenNeurons
+                + "\nLambda:\t" + BestLogItem.Lambda
+                + "\nEpoch:\t" + BestLogItem.Epochs.IndexOf(epoch) + " of " + BestLogItem.Epochs.Count
                 + "\nAccuracy:\t" + epoch.Accuracy.ToString("0.00%"));
         }
 
@@ -200,7 +199,8 @@ namespace ArtificialNeuralNetwork
         }
 
         public List<List<Logger.ANNLogItem>> LogItems { get; set; }
-        List<Logger.ANNLogItem> BestLogItem { get; set; }
+        List<Logger.ANNLogItem> BestLogItems { get; set; }
+        Logger.ANNLogItem BestLogItem { get; set; }
         public Dictionary<int, ChartViewModel> ViewModels;
 
         void CostEpochs_Checked(object sender, RoutedEventArgs e)
@@ -211,7 +211,7 @@ namespace ArtificialNeuralNetwork
             PlotMapCostEpoch.XAxis.Header = "Epochs";
             PlotMapCostEpoch.YAxis.ShowCrossLines = true;
             PlotMapCostEpoch.YAxis.Header = "Cost";
-            var filter = BestLogItem;
+            var filter = BestLogItems;
             foreach (var item in filter)
             {
                 ViewModels[item.NumberOfHiddenNeurons] = new ChartViewModel();
@@ -234,7 +234,7 @@ namespace ArtificialNeuralNetwork
             PlotMapCostLambda.XAxis.Header = "Lambda";
             PlotMapCostLambda.YAxis.ShowCrossLines = true;
             PlotMapCostLambda.YAxis.Header = "Cost/Accuracy";
-            var filter = BestLogItem
+            var filter = BestLogItems
                 .OrderBy(x => x.Lambda)
                 .ToList();
             var minCost = new ChartViewModel();
@@ -273,7 +273,8 @@ namespace ArtificialNeuralNetwork
             PlotMapCostEpochIdeal.XAxis.Header = "Epoch";
             PlotMapCostEpochIdeal.YAxis.ShowCrossLines = true;
             PlotMapCostEpochIdeal.YAxis.Header = "Cost/Accuracy";
-            var filter = BestLogItem.FirstOrDefault();
+            var filter = BestLogItem;
+            InitializeLegend(PlotMapCostEpochIdeal, String.Format("Cost/Accuracy for {0} hidden neurons and lambda ≈ {1}", filter.NumberOfHiddenNeurons, filter.Lambda));
 
             var cost = new ChartViewModel();
             var accuracy = new ChartViewModel();
@@ -298,7 +299,7 @@ namespace ArtificialNeuralNetwork
             PlotMapAccuracyEpoch.XAxis.Header = "Epochs";
             PlotMapAccuracyEpoch.YAxis.ShowCrossLines = true;
             PlotMapAccuracyEpoch.YAxis.Header = "Accuracy";
-            var filter = BestLogItem;
+            var filter = BestLogItems;
             foreach (var item in filter)
             {
                 ViewModels[item.NumberOfHiddenNeurons] = new ChartViewModel();
