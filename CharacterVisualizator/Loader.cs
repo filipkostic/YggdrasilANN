@@ -22,6 +22,16 @@ namespace CharacterVisualizator
             return GetImages(trainingSet, width, height, format, stride);
         }
 
+        public Image Load(double[] pixels)
+        {
+            int width = 8, height = 16;
+            var format = PixelFormats.Gray8;
+            int bytesPerPixel = (format.BitsPerPixel + 7) / 8;
+            int stride = bytesPerPixel * width;
+            byte[] pixl = GetPixels(Vector<double>.Build.DenseOfArray(pixels).ToRowMatrix(), 0);
+            return CreateImage(width, height, format, pixl, stride);
+        }
+
         Matrix<double> LoadSet(string path)
         {
             IParser parser = new StanfordLetterOCR();

@@ -80,8 +80,8 @@ namespace ContentParsers
         private Matrix<double> ReadDesiredMatrix(StreamReader stream)
         {
             int rows = GetNumberOfRows(stream);
-            Dictionary<char, List<int>> charactersAndIndexes = ReadCharacterRows(stream, rows);
-            var data = Matrix<double>.Build.Dense(rows, charactersAndIndexes.Count);
+            var charactersAndIndexes = ReadCharacterRows(stream, rows);
+            var data = Matrix<double>.Build.Dense(rows, charactersAndIndexes.Count());
             int column = 0;
             foreach (var character in charactersAndIndexes)
             {
@@ -95,7 +95,7 @@ namespace ContentParsers
             return data;
         }
 
-        private Dictionary<char, List<int>> ReadCharacterRows(StreamReader stream, int rows)
+        private IOrderedEnumerable<KeyValuePair<char, List<int>>> ReadCharacterRows(StreamReader stream, int rows)
         {
             var charactersAndIndexes = new Dictionary<char, List<int>>();
             for (int row = 0; row < rows; ++row)
@@ -108,8 +108,7 @@ namespace ContentParsers
                 charactersAndIndexes[letter].Add(row);
             }
             ResetStream(stream);
-            charactersAndIndexes.OrderBy(x => x.Key);
-            return charactersAndIndexes;
+            return charactersAndIndexes.OrderBy(x => x.Key);
         }
     }
 }

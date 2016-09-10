@@ -116,5 +116,16 @@ namespace NeuralNetwork.CostFunctions
             }
             return accuracy / testSet.RowCount;
         }
+
+        public double[] FeedForward(double[] unrolledWeights, int numberOfHiddenNeurons, int numberOfOutputs, double[] inputs)
+        {
+            var weights = Vector<double>.Build.DenseOfArray(unrolledWeights).ReshapeMatrices(numberOfHiddenNeurons, inputs.Length + 1, numberOfOutputs, numberOfHiddenNeurons + 1);
+            Vector<double> a1 = Vector<double>.Build.Random(1),
+                z2 = Vector<double>.Build.Random(1),
+                a2 = Vector<double>.Build.Random(1),
+                a3 = Vector<double>.Build.Random(1);
+            FeedForward(weights.Item1, weights.Item2, Vector<double>.Build.DenseOfArray(inputs).ToRowMatrix(), 0, out a1, out z2, out a2, out a3);
+            return a3.ToArray();
+        }
     }
 }

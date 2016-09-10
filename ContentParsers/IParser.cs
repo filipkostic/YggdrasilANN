@@ -1,6 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
-using System.Collections.Generic;
 
 namespace ContentParsers
 {

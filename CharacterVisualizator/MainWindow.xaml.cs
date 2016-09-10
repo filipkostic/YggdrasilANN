@@ -68,6 +68,7 @@ namespace CharacterVisualizator
             {
                 return;
             }
+            tbxLogFilePath.Text = filename;
             LogItems = ANNLogger.ReadLogFile(filename);
         }
 
@@ -96,9 +97,10 @@ namespace CharacterVisualizator
         {
             var image = GetRawImage();
             var imageManipulation = new ImageManipulation((int)DrawingTable.ActualWidth, (int)DrawingTable.ActualHeight, image);
-            LetterPreview.Children.Clear();
-            LetterPreview.Children.Add(new Image { Source = imageManipulation.TransformSize() });
             var pixels = imageManipulation.GetBinaryPixels();
+            LetterPreview.Children.Clear();
+            CharacterLoader loader = new CharacterLoader();
+            LetterPreview.Children.Add(loader.Load(pixels));
             return pixels;
         }
 
@@ -106,13 +108,22 @@ namespace CharacterVisualizator
         {
             var costFunction = NeuralNetwork.CostFunctions.CostFunction.Build(CostFunctionTypes.Sigmoid);
             var log = LogItems.OrderBy(x => x.Epochs.OrderBy(y => y.Accuracy).Last().Accuracy).Last();
-            var weights = Vector<double>.Build.DenseOfArray(log.Weights).ReshapeMatrices(log.NumberOfHiddenNeurons, 129, 26, log.NumberOfHiddenNeurons + 1);
-            Vector<double> a1 = Vector<double>.Build.Random(1),
-                z2=  Vector<double>.Build.Random(1),
-                a2 = Vector<double>.Build.Random(1),
-                a3 = Vector<double>.Build.Random(1);
-            costFunction.FeedForward(weights.Item1, weights.Item2, Vector<double>.Build.DenseOfArray(pixels).ToRowMatrix(), 0, out a1, out z2, out a2, out a3);
-            return Letters[a3.MaximumIndex()];
+
+            var outputs = costFunction.FeedForward(log.Weights, log.NumberOfHiddenNeurons, 26, pixels);
+            return Letters[IndexOfMax(outputs)];
+        }
+
+        int IndexOfMax(double[] outputs)
+        {
+            double max = outputs.Max();
+            for (int i = 0; i < outputs.Length; ++i)
+            {
+                if (outputs[i] == max)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         Image GetRawImage()
@@ -131,7 +142,7 @@ namespace CharacterVisualizator
             DiscoveredLetter.Text = "-";
         }
 
-        private void ClearDrawingTable()
+        void ClearDrawingTable()
         {
             DrawingTable.Children.Clear();
             DrawingTable.Strokes.Clear();
